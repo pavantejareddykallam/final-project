@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medicines</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amaranth:ital@1&family=Jost&family=Nunito&family=Poppins:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+    />
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+
+    <style>
+        *{
+    font-family: 'Poppins', sans-serif;
+    
+}
+#labels{
+    display: flex;
+    flex-direction: row;
+}
+#typ{
+    position: relative;
+    right: -360px;
+}
+#quantity{
+    position: relative;
+    right: -430px;
+}
+#unit{
+    position: relative;
+    right: -465px;
+}
+#usage{
+    position: relative;
+    right: -655px;
+}
+#med{
+    position: relative;
+    right: -150px;
+}
+ul {
+    list-style: none;
+}
+  .list {
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 0 0 5px 5px;
+  }
+  .list-items {
+    padding: 10px 5px;
+  }
+  .list-items:hover {
+    background-color: #dddddd;
+  }
+  input[type="text"] {
+    width: 25%;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 10px;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: 0.3s;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  input[type="text"]:focus {
+    border-color: #4E97D1;
+    box-shadow: 0 0 8px 0 #4E97D1;
+  }
+  #div input[type="text"] {
+    padding-left: 40px;
+  }
+  element.style {
+    position: relative;
+}
+
+  #div {
+    position: relative;
+  }
+  #div i{
+    position: relative;
+    left: -395px;
+    top: 1px;
+
+    padding: 9px 8px;
+    color: #aaa;
+    transition: 0.3s;
+  }
+  #div input[type="text"]:focus + i {
+    color: #4E97D1;
+  }
+  
+  #div.inputIconBg i {
+    background-color: #aaa;
+    color: #fff;
+    padding: 9px 4px;
+    border-radius: 4px 0 0 4px;
+  }
+  #div.inputIconBg input[type="text"]:focus + i {
+    color: #fff;
+    background-color: #4E97D1;
+  }
+  .select{
+    width: 10rem;
+  }
+  .select{
+    padding: 0.5rem;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 5px 5px;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: 0.3s;
+    cursor: pointer;
+    width: fit-content;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    left: -28px;
+   
+  }
+  .select:focus {
+    border-color: #4E97D1;
+    box-shadow: 0 0 8px 0 #4E97D1;
+  }
+  .add{
+    display: flex;
+    height: 37px;
+    padding: 0;
+    background: #7BB4E3;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    overflow: hidden;
+    font-family: "Quicksand", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    position: absolute;
+    right: 210px;
+    top: 72px;
+  }
+  .add:hover{
+    background:  #4E97D1;
+  }
+  .add:active{
+      background: #006DB2;
+  }
+  .add_icon{
+    display: inline-flex;
+    align-items: center;
+    padding: 0 24px;
+    color: #fff;
+    height: 100%;
+  }
+  .add_icon {
+    font-size: 1.5em;
+    background: rgba(0, 0, 0, 0.08);
+  }
+  .rem{
+    display: flex;
+    height: 37px;
+    padding: 0;
+    background: #7BB4E3;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    overflow: hidden;
+    font-family: "Quicksand", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    position: absolute;
+    right: 130px;
+    top: 72px;
+  }
+  .rem:hover{
+    background:  #4E97D1;
+  }
+  .rem:active{
+    background: #006DB2;
+  }
+  .rem_icon{
+    display: inline-flex;
+    align-items: center;
+    padding: 0 24px;
+    color: #fff;
+    height: 100%;
+  }
+  .rem_icon {
+    font-size: 1.5em;
+    background: rgba(0, 0, 0, 0.08);
+  }
+  #my-input{
+    align-items: center;
+  }
+  .textinput{
+    max-width: 8%;
+    position: relative;
+    right: 20px;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 10px;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: 0.3s;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+  }
+  .textinput:focus{
+    border-color: #4E97D1;
+    box-shadow: 0 0 8px 0 #4E97D1;
+  }
+  .days{
+    position: relative;
+    max-width: 8%;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 10px;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: 0.3s;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+  }
+  .days:focus{
+    border-color: #4E97D1;
+    box-shadow: 0 0 8px 0 #4E97D1;
+  }
+  .week {
+    max-width: 8%;
+    position: relative;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 10px;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: 0.3s;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+  }
+  .week:focus{
+    border-color: #4E97D1;
+    box-shadow: 0 0 8px 0 #4E97D1;
+  }
+  .day {
+    position: relative;
+    max-width: 8%;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 10px;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: 0.3s;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+  }
+  .day:focus{
+    border-color: #4E97D1;
+    box-shadow: 0 0 8px 0 #4E97D1;
+  }
+    </style>
+    <script type="text/javascript">
+      function isNumberKey(txt, evt) {
+        var charCode = evt.which ? evt.which : evt.keyCode;
+        if (charCode == 46) {
+          //Check if the text already contains the . character
+          if (txt.value.indexOf(".") === -1) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          if (charCode > 31 && (charCode < 48 || charCode > 57)) return false;
+        }
+        return true;
+      }
+    </script>
+    
+  </head>
+  <body>
+    <form action="">
+      <div class="container" id="div">
+        <div>
+          <div>
+            <div id="labels">
+              <label id="med"> <h3>Medicines</h3> </label>
+              <label id="typ"><h3>Types</h3></label>
+              <label id="quantity"><h3>Quantity</h3></label>
+              <label id="unit"><h3>Units</h3></label>
+              <label id="usage"><h3>Course usage</h3></label>
+            </div>
+            <input
+              type="text"
+              name="medicines[]"
+              id="medicines_0"
+              class="myinput form-control"
+              placeholder="Medicine-1"
+              onkeyup="myFunction(0)"
+            />
+
+            <i
+              class="fa fa-stethoscope fa-lg fa-fw"
+              id="logo"
+              aria-hidde="true"
+            ></i>
+
+            <select
+              class="select"
+              name="sel1[]"
+              id="a0"
+              onchange="populate(this.id, 'b0')"
+            >
+              <option value="">select</option>
+              <option value="tablets">tablets</option>
+              <option value="syrup">syrup</option>
+              <option value="injections">injections</option>
+            </select>
+            <input
+              class="textinput"
+              id="numtext_0"
+              random=""
+              placeholder="eg:5ml/100mg"
+              onkeypress="return isNumberKey(this, event);"
+            />
+            <select name="sel2[]" class="select" id="b0"></select>
+            <input
+              class="day"
+              id="day_0"
+              placeholder="times in a Day"
+              random=""
+              onkeypress="return isNumberKey(this, event);"
+            />
+            <input
+              class="week"
+              id="week_0"
+              placeholder="days in a Week"
+              random=""
+              onkeypress="return isNumberKey(this, event);"
+            />
+            <input
+              class="days"
+              id="days_0"
+              placeholder="no of Days"
+              random=""
+              onkeypress="return isNumberKey(this, event);"
+            />
+            <ul class="list" id="l_0"></ul>
+            <button type="button" class="add" onclick="add()">
+              <span class="add_icon">
+                <ion-icon name="add-circle-outline"></ion-icon>
+              </span>
+            </button>
+            <button type="button" class="rem" onclick="remove()">
+              <span class="rem_icon">
+                <ion-icon name="remove-circle-outline"></ion-icon>
+              </span>
+            </button>
+          </div>
+          <div id="sym"></div>
+        </div>
+      </div>
+      Patient Cured:
+      <input type="radio" name="c" value="1" /> Yes
+      <input type="radio" name="c" value="2" checked /> No
+    </form>
+    <script>
+        var texBox = "";
+var count = 1;
+var sym = document.getElementById("sym");
+function add() {
+    var div = document.createElement("div");
+   div.setAttribute("class", "form-group");
+    div.setAttribute("id", "s" + count);
+    if(count<15){
+        console.log(count);
+        var textBox =
+        "<input type='text' name='medicines[]' id='medicines_"+count+"' class='myinput form-control' placeholder='Medicine-"+(count+1)+"' onkeyup='myFunction("+count+")' /> <i class='fa fa-stethoscope fa-lg fa-fw' id='logo' aria-hidde='true' ></i> <select class='select' name='sel1[]' id='a"+count+"' onchange='populate(this.id, \"b"+count+"\")'> <option value=''>select</option> <option value='tablets'>tablets</option> <option value='syrup'>syrup</option> <option value='injections'>injections</option> </select> <input  class='textinput' id='numtext_"+count+"'  random='' placeholder='eg:5ml/100mg' onkeypress='return isNumberKey(this, event);' /> <select name='sel2[]' class='select' id='b"+count+"'></select> <input class='day' id='day_"+count+"'  random=''  placeholder='times in a Day' onkeypress='return isNumberKey(this, event);'/> <input class='week' id='week_"+count+"' random='' placeholder='days in a Week' onkeypress='return isNumberKey(this, event);' /> <input class='days' id='days_"+count+"' random='' placeholder='no of Days' onkeypress='return isNumberKey(this, event);' /><ul class='list' id='l_"+count+"'></ul>";
+        div.innerHTML = textBox;
+        sym.appendChild(div);
+        count++;
+    }
+}
+function remove() {
+    console.log(count);
+    a=document.getElementById("sym");
+    b=document.getElementById("s"+(count-1));
+    a.removeChild(b);
+    count--;
+}
+
+/*let names = [
+    "cold",
+    "cough",
+    "fever",
+    "headache",
+    "sleeplessness",
+    "stomachpain",
+  ];*/
+  let sortedNames = names.sort();
+  function myFunction(count){
+  let input = document.getElementById("medicines_"+(count));
+    removeElements();
+    for (let i of sortedNames) {
+  
+      if (
+        i.toLowerCase().startsWith(input.value.toLowerCase()) &&
+        input.value != ""
+      ) {
+        let listItem = document.createElement("li");
+        listItem.classList.add("list-items");
+        listItem.style.cursor = "pointer";
+        listItem.setAttribute("onclick", "displayNames('" + i + "', "+(count)+")");
+        let word = "<b>" + i.substr(0, input.value.length) + "</b>";
+        word += i.substr(input.value.length);
+        listItem.innerHTML = word;
+        document.getElementById("l_"+(count)).appendChild(listItem);
+      }
+    }
+}
+  function displayNames(value, count) {
+    let input = document.getElementById("medicines_"+(count));
+    input.value = value;
+    removeElements();
+  }
+  function removeElements() {
+    let items = document.querySelectorAll(".list-items");
+    items.forEach((item) => {
+      item.remove();
+    });
+  }
+  
+  function range(count, innc){
+  const myInput = document.getElementById("myinput_"+count);
+
+      let id = myInput.getAttribute("id");
+      let min = myInput.getAttribute("min");
+      let max = myInput.getAttribute("max");
+      let step = myInput.getAttribute("step");
+      let val = myInput.getAttribute("value");
+      let calcStep = (innc == "increment") ? (step*1) : (step * -1);
+      let newValue = parseInt(val) + calcStep;
+
+      if(newValue >= min && newValue <= max){
+          myInput.setAttribute("value", newValue);
+      } 
+}
+function populate(s1, s2){
+  var s1=document.getElementById(s1);
+  var s2=document.getElementById(s2);
+  s2.innerHTML="";
+  if(s1.value=='tablets'){
+
+    var optionarray=[
+      'mg' 
+    ];
+   
+  }
+  else if(s1.value=='syrup'){
+    var optionarray=[
+      'ml'
+    ];
+   
+  }
+  else if(s1.value=='injections'){
+    var optionarray=[
+      'ml'
+    ];
+   
+  }
+  for (var option in optionarray){
+    var pair=optionarray[option];
+    var newop=document.createElement("option");
+    newop.value=pair[0];
+    newop.innerHTML=pair[0]+""+pair[1];
+    s2.options.add(newop);
+  }
+}
+
+    </script>
+  </body>
+</html>
