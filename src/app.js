@@ -14,6 +14,10 @@ const Register = require("./models/registers");
 const Register2 = require("./models/register2");
 const Register3 = require("./models/register3");
 const { json, response, query } = require("express");
+const Test = require('./models/test');
+const SymptomsSecond = require('./models/symptom-second');
+const Medicine = require('./models/medicine');
+
 
 const port = process.env.PORT || 3000;
 const static_path = path.join(__dirname, "../public");
@@ -195,23 +199,6 @@ app.get("/symptoms", auth, async (req, res) => {
     res.render("symptoms");
 });
 
-
-app.post("/registersymptoms", async (req, res) => {
-    try {
-        await Register3.create({
-            patient: req.body.patient,
-            visitno: req.body.visitno,
-            symptoms: req.body.symptoms
-        });
-        res.json({ msg: "success" });
-    }
-    catch (error) {
-        res.sendStatus(400);
-    }
-});
-
-
-
 app.get("/patientoptions", auth, async (req, res) => {
     res.render("patientoptions", { adminname: adminnamelogo, username: req.query.user, visitCount: req.query.visit });
 });
@@ -306,16 +293,120 @@ app.post("/medicalhistory", async (req, res) => {
             if (symptomData === null || symptomData === undefined) {
                 res.json({ data: "Data not found" });
             } else {
-                res.json({ data: symptomData });
+                res.json({ data: symptomData, type: "symptoms" });
+            }
+        } else if (req.body.selection === "tests") {
+            const testData = await Test.findOne({ patient: req.body.patientName, visitno: req.body.visitNumber }).exec();
+            if (testData === null || testData === undefined) {
+                res.json({ data: "Data not found" });
+            } else {
+                res.json({ data: testData, type: "tests" });
+            }
+        } else if (req.body.selection === "symptomsSecond") {
+            const symptomsSecondData = await SymptomsSecond.findOne({ patient: req.body.patientName, visitno: req.body.visitNumber }).exec();
+            if (symptomsSecondData === null || symptomsSecondData === undefined) {
+                res.json({ data: "Data not found" });
+            } else {
+                res.json({ data: symptomsSecondData, type: "symptomsSecond" });
+            }
+        } else if (req.body.selection === "medicine") {
+            const medicineData = await Medicine.findOne({ patient: req.body.patientName, visitno: req.body.visitNumber }).exec();
+            if (medicineData === null || medicineData === undefined) {
+                res.json({ data: "Data not found" });
+            } else {
+                res.json({ data: medicineData, type: "medicine" });
             }
         } else {
             res.json({ data: "Data not found" });
         }
+
     }
     catch (error) {
         res.sendStatus(400);
     }
-})
+});
+
+
+// const storage = new GridFsStorage({
+//     url: process.env.URI,
+//     options: { useNewUrlParser: true, useUnifiedTopology: true },
+//     file: (req, file) => {
+//         console.log(req.body.tests, "ttttttttttt");
+//         const match = ["image/png", "image/jpeg", "image/jpg"];
+//         if (match.indexOf(file.mimetype) === -1) {
+//             const filename = `${Date.now()}-file-${file.originalname}`;
+//             return filename;
+//         }
+//         return {
+//             bucketName: "imageBucket",
+//             filename: `${Date.now()}-file-${file.originalname}`
+//         };
+//     }
+// });
+
+// var uploadFiles = multer({ storage: storage })
+// var uploadFilesMiddleware = util.promisify(uploadFiles);
+
+app.get("/prescription", auth, (req, res) => {
+    res.render("medicines");
+});
+
+app.post("/registersymptoms", async (req, res) => {
+    try {
+        await Register3.create({
+            patient: req.body.patient,
+            visitno: req.body.visitno,
+            symptoms: req.body.symptoms
+        });
+        res.json({ msg: "success" });
+    }
+    catch (error) {
+        res.sendStatus(400);
+    }
+});
+
+app.post("/test/create", async (req, res) => {
+    try {
+        await Test.create({
+            patient: req.body.patient,
+            visitno: req.body.visitno,
+            tests: req.body.tests
+        });
+        res.json({ msg: "success" });
+
+    } catch (error) {
+        res.json({ msg: "Something went wrong" })
+    }
+});
+
+app.post("/symptom/second/create", async (req, res) => {
+    try {
+        await SymptomsSecond.create({
+            patient: req.body.patient,
+            visitno: req.body.visitno,
+            symptoms: req.body.symptomsSecond
+        });
+        res.json({ msg: "success" });
+
+    } catch (error) {
+        res.json({ msg: "Something went wrong" })
+    }
+});
+
+app.post("/medicine/create", async (req, res) => {
+    try {
+        await Medicine.create({
+            patient: req.body.patient,
+            visitno: req.body.visitno,
+            medicines: req.body.medicines
+        });
+        res.json({ msg: "success" });
+
+    } catch (error) {
+        res.json({ msg: "Something went wrong" })
+    }
+});
+
 
 
 app.listen(port, () => {

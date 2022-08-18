@@ -393,7 +393,8 @@
           console.log("success");
           window.location.href = `/patientoptions?user=${patient}&visit=${visitno}`;
         })
-        .fail(function () {
+        .fail(function (err) {
+          alert("Something went wrong, Try again")
           console.log("error");
         })
     });

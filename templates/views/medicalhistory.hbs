@@ -314,6 +314,10 @@
     .display-table tbody tr:last-of-type {
       border-bottom: 3px solid #308cc6;
     }
+    .file-text {
+      display: inline-block;
+      margin-left: 15px;
+    }
   </style>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script type="text/javascript"></script>
@@ -344,9 +348,9 @@
             <select class="select" name="selection" id="selection">
               <option value="" disabled selected>Options</option>
               <option value="symptoms">Symptoms</option>
-              <option value="prescription">Prescription</option>
+              <option value="medicine">Prescription</option>
               <option value="tests">Tests</option>
-              <option value="symptomsTest">Symptoms After tests</option>
+              <option value="symptomsSecond">Symptoms After tests</option>
             </select>
             <button class="btn">Submit</button>
 
@@ -360,14 +364,8 @@
   <div id="err-msg"></div>
 
   <table class="display-table" id="table" style="display: none;">
-    <thead>
-      <tr>
-        <th>Symptom</th>
-        <th>Intensity</th>
-        <th>Type</th>
-        <th>Value</th>
-        <th>Unit</th>
-      </tr>
+    <thead id="thead">
+
     </thead>
     <tbody id="tbody">
 
@@ -381,6 +379,7 @@
     let errMsg = document.getElementById("err-msg");
     let table = document.getElementById("table");
     let tbody = document.getElementById("tbody");
+    let thead = document.getElementById("thead");
 
 
 
@@ -395,14 +394,24 @@
 
       $.post("/medicalhistory", { selection, patientName, visitNumber })
         .done(function (res) {
+          console.log({ res })
           if (res?.data === "Data not found") {
             errMsg.innerHTML = `<h1> ${res.data || "Data not found"} </h1>`;
+            thead.innerHTML = "";
             tbody.innerHTML = "";
             table.style.display = "none";
-          } else {
+          } else if (res?.type === "symptoms") {
             errMsg.innerHTML = "";
+            thead.innerHTML = "";
             tbody.innerHTML = "";
             table.style.display = "table";
+            $("#thead").append(` <tr>
+                                     <th>Symptom</th>
+                                     <th>Intensity</th>
+                                     <th>Type</th>
+                                     <th>Value</th>
+                                     <th>Unit</th>
+                                  </tr>`)
             res?.data?.symptoms.forEach((el) => {
               $("#tbody").append(` <tr>
                                     <td>${el.symptom}</td>
@@ -412,6 +421,75 @@
                                     <td>${el.unit}</td>
                                   </tr>`)
             })
+          } else if (res?.type === "tests") {
+            errMsg.innerHTML = "";
+            thead.innerHTML = "";
+            tbody.innerHTML = "";
+            table.style.display = "table";
+            $("#thead").append(` <tr>
+                                     <th>Test Name</th>
+                                     <th>Test Media File</th>
+                                  </tr>`)
+            res?.data?.tests.forEach((el) => {
+              $("#tbody").append(` <tr>
+                                    <td>${el.test}</td>
+                                    <td><button>Download</button><span class="file-text">${el?.media.split("fakepath\\")[1]}</span></td>
+                                  </tr>`)
+            })
+          } else if (res?.type === "symptomsSecond") {
+            errMsg.innerHTML = "";
+            thead.innerHTML = "";
+            tbody.innerHTML = "";
+            table.style.display = "table";
+            $("#thead").append(` <tr>
+                                     <th>Symptom</th>
+                                     <th>Intensity</th>
+                                     <th>Type</th>
+                                     <th>Value</th>
+                                     <th>Unit</th>
+                                     <th>Symptom Media File</th>
+                                  </tr>`)
+            res?.data?.symptoms.forEach((el) => {
+              $("#tbody").append(` <tr>
+                                    <td>${el.symptom}</td>
+                                    <td>${el.intensity}</td>
+                                    <td>${el.type}</td>
+                                    <td>${el.value}</td>
+                                    <td>${el.unit}</td>
+                                    <td><button>Download</button><span class="file-text">${el?.media.split("fakepath\\")[1]}</span></td>
+                                  </tr>`)
+            })
+          } else if (res?.type === "medicine") {
+            errMsg.innerHTML = "";
+            thead.innerHTML = "";
+            tbody.innerHTML = "";
+            table.style.display = "table";
+            $("#thead").append(` <tr>
+                                     <th>Medicine</th>
+                                     <th>Type</th>
+                                     <th>Quantity</th>
+                                     <th>Unit</th>
+                                     <th>Time Day</th>
+                                     <th>Days week</th>
+                                     <th>Number of Day</th>
+                                     <th>Cured</th>
+                                  </tr>`)
+            res?.data?.medicines.forEach((el) => {
+              $("#tbody").append(` <tr>
+                                    <td>${el.medicine}</td>
+                                    <td>${el.type}</td>
+                                    <td>${el.quantity}</td>
+                                    <td>${el.unit}</td>
+                                    <td>${el.timeDay}</td>
+                                    <td>${el.weekDay}</td>
+                                    <td>${el.days}</td>
+                                    <td>${el.cured}</td>
+                                  </tr>`)
+            })
+          } else {
+            errMsg.innerHTML = `<h1> ${"Something went wrong"} </h1>`;
+            tbody.innerHTML = "";
+            table.style.display = "none";
           }
         })
         .fail(function (err) {
