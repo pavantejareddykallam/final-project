@@ -23,12 +23,18 @@
       background-color: #7bb4e3;
       border-radius: 5px;
       font-family: "Quicksand", sans-serif;
-      cursor: pointer;
-      margin: 5px 5px;
+      margin: 10px 5px;
       width: fit-content;
       font-size: 16px;
       font-weight: 500;
       height: 40px;
+      position: relative;
+    }
+
+    .b1 progress {
+      position: absolute;
+      left: 0px;
+      bottom: -17px;
     }
 
     .b1:hover {
@@ -232,6 +238,14 @@
       color: #fff;
       background-color: #4E97D1;
     }
+
+    #upload-btn:disabled {
+      cursor: not-allowed;
+    }
+
+    #upload-btn:hover {
+      background-color: #7bb4e3;
+    }
   </style>
 </head>
 
@@ -241,11 +255,14 @@
     <div id="div">
       <input type="text" name="test " id="ip0" placeholder="Test-1" />
       <i class="fa fa-user-md fa-lg fa-fw" aria-hidden="true"></i>
-      <input type="file" id="real-file_0" onchange="fun2(0)" hidden="hidden" />
+      <input type="file" id="real-file_0" onchange="fun2(event, 0)" hidden="hidden" />
+      <input type="text" id="file-url-0" hidden="hidden" />
       <button type="button" class="b1" name="test" id="custom-button_0" onclick="fun(0)">
         Choose a File
+        <progress id="progress-0" value="0" max="100"> </progress>
+
       </button>
-      <span class="t1" id="custom-text_0">Media File-1</span>
+      <span class="t1 m-fix" id="custom-text_0">Media File-1</span>
       <button type="button" class="add" onclick="add()">
         <span class="add_icon">
           <ion-icon name="add-circle-outline"></ion-icon>
@@ -256,7 +273,7 @@
           <ion-icon name="remove-circle-outline"></ion-icon>
         </span>
       </button>
-      <button type="submit" class="button">
+      <button type="submit" class="button" id="upload-btn">
         <span class="button__text">Upload</span>
         <span class="button__icon">
           <ion-icon name="cloud-upload-outline"></ion-icon>
@@ -266,12 +283,55 @@
     <div id="test"></div>
   </form>
 
+  <script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-storage.js"></script>
+
   <script>
-    // const realFileBtn = document.getElementById("real-file_0");
-    // const customBtn = document.getElementById("custom-button_0");
+    let uploadBtn = document.getElementById("upload-btn");
+
+    var firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: ""
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    function uploadFile(file, index) {
+      if (file.size > 5250000) {
+        document.getElementById(`real-file_${index}`).value = null;
+        document.getElementById(`custom-text_${index}`).innerHTML = "No file chosen, yet."
+        alert("file size must be less then 5mb");
+        return;
+      }
+      uploadBtn.disabled = true
+      const storage = firebase.storage().ref("Files/" + file.name);
+      const task = storage.put(file);
+      let fileInput = document.getElementById(`file-url-${index}`);
+      let progressBar = document.getElementById(`progress-${index}`);
+
+      task.on("state_change",
+        function progress(snap) {
+          progressBar.value = (snap.bytesTransferred / snap.totalBytes * 100);
+        },
+
+        function error(err) {
+          alert("something went wrong")
+        },
+
+        function completed() {
+          storage.getDownloadURL()
+            .then((url) => {
+              fileInput.value = url;
+              uploadBtn.disabled = false
+            })
+        }
+      )
+    }
+
     const customTxt = document.getElementById("custom-text_0");
-
-
     const params = new URLSearchParams(window.location.search);
 
     const testData = [];
@@ -289,9 +349,8 @@
           media: ""
         }
 
-
         let test = document.getElementById(`ip${i}`).value;
-        let media = document.getElementById(`real-file_${i}`).value;
+        let media = document.getElementById(`file-url-${i}`).value;
 
         tests.test = test
         tests.media = media
@@ -305,7 +364,6 @@
         .done(function (res) {
           console.log("success", res);
           window.location.href = `/patientoptions?user=${patient}&visit=${visitno}`;
-
         })
         .fail(function (err) {
           alert("Something went wrong, Try again")
@@ -313,19 +371,17 @@
         })
     });
 
-
-
     function fun(id) {
       filebtn = document.getElementById("real-file_" + id);
       filebtn.click();
     }
-    function fun2(id) {
+
+    function fun2(e, id) {
+      uploadFile(e.target.files[0], id)
       customTxt1 = document.getElementById("custom-text_" + id);
       filebtn2 = document.getElementById("real-file_" + id);
       if (filebtn2.value) {
-        customTxt1.innerHTML = filebtn2.value.match(
-          /[\/\\]([\w\d\s\.\-\(\)]+)$/
-        )[1];
+        customTxt1.innerText = `${filebtn2.value.match(/[\/\\]([\w\d\s\.\-\(\)]+)$/)[1]}`
       } else {
 
         customTxt1.innerHTML = "No file chosen, yet.";
@@ -340,9 +396,7 @@
       div.setAttribute("class", "div");
       div.setAttribute("id", "test" + count);
       if (count < 10) {
-        var textBox =
-          "<input type='text' name='tests' id='ip" + count + "' placeholder='Test-" + (count + 1) + "' /><i class='fa fa-user-md fa-lg fa-fw' aria-hidden='true'></i> <input type='file' id='real-file_" + count + "' onchange='fun2(" + count + ")'  hidden='hidden' /> <button type='button' name='test' id='custom-button_" + count + "' class='b1' onclick='fun(" + count + ")'>Choose a File</button> <span class='t1' id='custom-text_" + count + "'>Media File-" + (count + 1
-          ) + "</span> ";
+        var textBox = "<input type='text' name='tests' id='ip" + count + "' placeholder='Test-" + (count + 1) + "' /><i class='fa fa-user-md fa-lg fa-fw' aria-hidden='true'></i> <input type='file' id='real-file_" + count + "' onchange='fun2(event, " + count + ")'  hidden='hidden' />  <input type='text' id='file-url-" + count + "' hidden='hidden' />  <button type='button' name='test' id='custom-button_" + count + "' class='b1' onclick='fun(" + count + ")'>Choose a File  <progress id='progress-" + count + "' value='0' max='100'> </progress> </button> <span class='t1' id='custom-text_" + count + "'>Media File-" + (count + 1) + "</span> ";
         div.innerHTML = textBox;
         test.appendChild(div);
         count++;

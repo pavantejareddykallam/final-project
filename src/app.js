@@ -327,26 +327,6 @@ app.post("/medicalhistory", async (req, res) => {
 });
 
 
-// const storage = new GridFsStorage({
-//     url: process.env.URI,
-//     options: { useNewUrlParser: true, useUnifiedTopology: true },
-//     file: (req, file) => {
-//         console.log(req.body.tests, "ttttttttttt");
-//         const match = ["image/png", "image/jpeg", "image/jpg"];
-//         if (match.indexOf(file.mimetype) === -1) {
-//             const filename = `${Date.now()}-file-${file.originalname}`;
-//             return filename;
-//         }
-//         return {
-//             bucketName: "imageBucket",
-//             filename: `${Date.now()}-file-${file.originalname}`
-//         };
-//     }
-// });
-
-// var uploadFiles = multer({ storage: storage })
-// var uploadFilesMiddleware = util.promisify(uploadFiles);
-
 app.get("/prescription", auth, (req, res) => {
     res.render("medicines");
 });
@@ -375,7 +355,7 @@ app.post("/test/create", async (req, res) => {
         res.json({ msg: "success" });
 
     } catch (error) {
-        res.json({ msg: "Something went wrong" })
+        res.sendStatus(400);
     }
 });
 
@@ -389,7 +369,7 @@ app.post("/symptom/second/create", async (req, res) => {
         res.json({ msg: "success" });
 
     } catch (error) {
-        res.json({ msg: "Something went wrong" })
+        res.sendStatus(400);
     }
 });
 
@@ -403,7 +383,7 @@ app.post("/medicine/create", async (req, res) => {
         res.json({ msg: "success" });
 
     } catch (error) {
-        res.json({ msg: "Something went wrong" })
+        res.sendStatus(400);
     }
 });
 

@@ -314,6 +314,7 @@
     .display-table tbody tr:last-of-type {
       border-bottom: 3px solid #308cc6;
     }
+
     .file-text {
       display: inline-block;
       margin-left: 15px;
@@ -394,7 +395,6 @@
 
       $.post("/medicalhistory", { selection, patientName, visitNumber })
         .done(function (res) {
-          console.log({ res })
           if (res?.data === "Data not found") {
             errMsg.innerHTML = `<h1> ${res.data || "Data not found"} </h1>`;
             thead.innerHTML = "";
@@ -431,9 +431,13 @@
                                      <th>Test Media File</th>
                                   </tr>`)
             res?.data?.tests.forEach((el) => {
+              let fileDownload = "No File Uploaded"
+              if (el.media) {
+                fileDownload = `<a target="_blank" href=${el.media}>Download</a><span class="file-text">Media File</span>`
+              }
               $("#tbody").append(` <tr>
                                     <td>${el.test}</td>
-                                    <td><button>Download</button><span class="file-text">${el?.media.split("fakepath\\")[1]}</span></td>
+                                    <td>${fileDownload}</td>
                                   </tr>`)
             })
           } else if (res?.type === "symptomsSecond") {
@@ -450,13 +454,17 @@
                                      <th>Symptom Media File</th>
                                   </tr>`)
             res?.data?.symptoms.forEach((el) => {
+              let fileToDownload = "No File Uploaded"
+              if (el.media) {
+                fileToDownload = `<a target="_blank" href=${el.media}>Download</a><span class="file-text">Media File</span>`
+              }
               $("#tbody").append(` <tr>
                                     <td>${el.symptom}</td>
                                     <td>${el.intensity}</td>
                                     <td>${el.type}</td>
                                     <td>${el.value}</td>
                                     <td>${el.unit}</td>
-                                    <td><button>Download</button><span class="file-text">${el?.media.split("fakepath\\")[1]}</span></td>
+                                    <td>${fileToDownload}</td>
                                   </tr>`)
             })
           } else if (res?.type === "medicine") {
@@ -493,10 +501,13 @@
           }
         })
         .fail(function (err) {
+          errMsg.innerHTML = "";
+          thead.innerHTML = "";
+          tbody.innerHTML = "";
+          alert("something went wrong")
           console.log(err);
         })
     });
-
     function add() {
       var div = document.createElement("div");
       div.setAttribute("class", "form-group");
@@ -512,7 +523,6 @@
       }
     }
     function remove() {
-      console.log(count);
       a = document.getElementById("sym");
       b = document.getElementById("s" + (count - 1));
       a.removeChild(b);
@@ -631,7 +641,6 @@
       else if (check == "div") {
         var reg = /^[0-9.\-\&/ ]*$/;
         var c = String.fromCharCode(evt.which)
-        console.log(c);
         if (reg.test(c)) {
           return true;
         }
